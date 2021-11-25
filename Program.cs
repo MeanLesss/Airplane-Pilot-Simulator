@@ -8,7 +8,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
         static void Main(string[] args)
         {
             WriteLine("Hello World!");
-
+            //sdfsdfsdf
 
             ReadKey();
         }

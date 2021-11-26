@@ -29,55 +29,53 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 
             TreatControlCAsInput = true;
 
-            //input = ReadKey(true);
 
 
             do
             {
                 key = ReadKey(true);
 
-                if (key.Modifiers != 0)
-                {
-                    WriteLine("up key....");
+                /*if(!(key.Modifiers != 0))
+                {*/
+                if(!((key.Modifiers & ConsoleModifiers.Shift) != 0))
+                { 
+                    if(key.Key == ConsoleKey.UpArrow)
+                    {
+                        WriteLine("up arrow.....");
+                    }
+                    if(key.Key == ConsoleKey.DownArrow)
+                    {
+                        WriteLine("down arrow.....");
+                    }
+                    if(key.Key == ConsoleKey.LeftArrow)
+                    {
+                        WriteLine("left arrow.....");
+                    }
+                    if (key.Key == ConsoleKey.RightArrow) 
+                    {
+                        WriteLine("right arrow.....");
+                    }
 
                 }
-                if ((key.Modifiers & ConsoleModifiers.Shift) != 0)
+                else
                 {
                     if (key.Key == ConsoleKey.UpArrow)
                     {
-                        WriteLine("shift key up key....");
+                        WriteLine("shift up arrow....");
+                    }
+                    if (key.Key == ConsoleKey.DownArrow)
+                    {
+                        WriteLine("shift down arrow.....");
+                    }
+                    if (key.Key == ConsoleKey.LeftArrow)
+                    {
+                        WriteLine("shift left arrow.....");
+                    }
+                    if (key.Key == ConsoleKey.RightArrow)
+                    {
+                        WriteLine("shift right arrow.....");
                     }
                 }
-
-               /* if (key == ConsoleKey.DownArrow)
-                {
-                    WriteLine("down key....");
-
-                }
-                else if ((key == ConsoleKey.DownArrow) & ConsoleModifiers.Shift != 0)
-                {
-                    WriteLine("shift key down key....");
-                }
-
-                if (key == ConsoleKey.LeftArrow)
-                {
-                    WriteLine("left key....");
-
-                }
-                else if ((key == ConsoleKey.LeftArrow) & ConsoleModifiers.Shift != 0)
-                {
-                    WriteLine("shift key left key....");
-                }
-
-                if (key == ConsoleKey.RightArrow)
-                {
-                    WriteLine("right key....");
-
-                }
-                else if ((key == ConsoleKey.RightArrow) & ConsoleModifiers.Shift != 0)
-                {
-                    WriteLine("shift key right key....");
-                }*/
 
             } while (key.Key != ConsoleKey.Escape);
             

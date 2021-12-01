@@ -9,16 +9,34 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 {
     class Controller
     {
+        
+        Random random = new Random();
+        private string name;
+        private float condition ;
+        private float Hr;
 
-        private string Name;
-
-        public Controller(string name)
+        public Controller() 
         {
-            this.Name = name;
+            this.name = "unknown";
+        }
+        public Controller(string name,float condition)
+        {
+            this.name = name;
+            this.condition = condition;
         }
 
+        public void DisplayNameAndConditon(int id)
+        {
+            WriteLine("Controller " + id);
+            Write("Name : " + name);
+            WriteLine("\tCondition : " + condition);
+        }
+
+        public void DisplayRecommendAltitude()
+        {
+            WriteLine("Recommend altitude : " + Hr);
+        }
         //take random N while being create- is
-        //the wheather condidton adjustment random number(-200 to +200 meters)
         //meter to kilo meter = meter/1000
         //
 
@@ -30,7 +48,26 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 
         //take noticfiacation from the airplane speed and alt changes use delegate
 
-        //class RecommendAltitude()
+        //method RecommendAltitude()
         //formula Hr = 7 * Speed(km/h)-N
+        public void RecommendAltitude(float speed)
+        {
+            condition /= 1000;
+            Hr = 7 * speed - condition;
+            WriteLine("Recommend Altitude = " + Hr);
+        }
+
+        public float DisplayCurrentSpeed(float speed)
+        {
+            WriteLine("Current speed : " + speed);
+            WriteLine();
+            return speed;
+        }
+        public float DisplayCurrentAltitude(float height)
+        {
+            WriteLine("Current height : " + height);
+            WriteLine();
+            return height;
+        }
     }
 }

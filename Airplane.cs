@@ -9,11 +9,10 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 {
     class Airplane
     {
-        public delegate float ChangesSpeed(float speed);
-        public delegate float ChangesAltitude(float height);
+
         private float speed;
         private float height;
-
+        
         public Airplane() { }
         public Airplane(float speed, float height)
         {
@@ -23,75 +22,128 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
         public float Speed {get; set; }
         public float Height { get; set; }
 
-        public void ControlSpeedAndAltitude()
+        //the speed contorl by left right arrow key
+        //Right: +50 km/h ,shift + right: +150km/h
+        //left : -50 km/h ,shift + left: -150km/h
+        //height control by up down arrow key
+        //up: +250m , shift + up : +500m
+        //down : -250m , shift + down : -500m
+        public static float ChangeSpeed(float speed)
+        {
+            return speed;
+        }
+        public static float ChangeAltitude(float height)
+        {
+            return height;
+        }
+        public void ControlSpeedAndAltitude(ChangesSpeed changesSpeed, ChangesAltitude changesAltitude)
         {
             ConsoleKeyInfo key;
 
             TreatControlCAsInput = true;
-
-
+            speed = 0;
+            height = 0;
 
             do
             {
+
                 key = ReadKey(true);
 
-                /*if(!(key.Modifiers != 0))
-                {*/
-                if(!((key.Modifiers & ConsoleModifiers.Shift) != 0))
-                { 
-                    if(key.Key == ConsoleKey.UpArrow)
+                if (!((key.Modifiers & ConsoleModifiers.Shift) != 0))
+                {
+                    if (key.Key == ConsoleKey.UpArrow)
                     {
-                        WriteLine("up arrow.....");
-                    }
-                    if(key.Key == ConsoleKey.DownArrow)
-                    {
-                        WriteLine("down arrow.....");
-                    }
-                    if(key.Key == ConsoleKey.LeftArrow)
-                    {
-                        WriteLine("left arrow.....");
-                    }
-                    if (key.Key == ConsoleKey.RightArrow) 
-                    {
-                        WriteLine("right arrow.....");
-                    }
+                        height += 250;//meter
+                                      //WriteLine("up arrow.....");
+                        changesAltitude(height);
 
+                    }
+                    if (key.Key == ConsoleKey.DownArrow)
+                    {
+                        if (height > 0)
+                        {
+                            height -= 250;// meter
+                        }
+                        // WriteLine("down arrow.....");
+                        changesAltitude(height);
+
+                    }
+                    if (key.Key == ConsoleKey.LeftArrow)
+                    {
+                        speed -= 50; // km/h
+                                     // WriteLine("left arrow.....");
+                        changesSpeed(speed);
+
+                    }
+                    if (key.Key == ConsoleKey.RightArrow)
+                    {
+                        speed += 50; // km/h
+                        changesSpeed(speed);
+
+                        //("right arrow.....");
+                    }
                 }
                 else
                 {
                     if (key.Key == ConsoleKey.UpArrow)
                     {
-                        WriteLine("shift up arrow....");
+                        height += 500; // meter
+                                       //WriteLine("shift up arrow....");
+                        changesAltitude(height);
+
                     }
                     if (key.Key == ConsoleKey.DownArrow)
                     {
-                        WriteLine("shift down arrow.....");
+                        height -= 500; // meter
+                                       //WriteLine("shift down arrow.....");
+                        changesAltitude(height);
+
                     }
                     if (key.Key == ConsoleKey.LeftArrow)
                     {
-                        WriteLine("shift left arrow.....");
+                        speed -= 150; // km/h
+
+                        //WriteLine("shift left arrow.....");
+                        changesSpeed(speed);
+
                     }
                     if (key.Key == ConsoleKey.RightArrow)
                     {
-                        WriteLine("shift right arrow.....");
+                        speed += 150; // km/h
+
+                        //WriteLine("shift right arrow.....");
+                        changesSpeed(speed);
+
                     }
+                }
+                if (speed == 1000)
+                {
+                    WriteLine("You have reach the speed limit. Prepare to land !");
+
+                }
+                else if (speed > 1000)
+                {
+                    WriteLine("You went over the speed limit, reduce the speed immediately");
+
+                }
+                else if (speed > 0 && height == 0)
+                {
+                    WriteLine("You have crash the plane !!!!");
+                    break;
+                }
+                else if (speed <= 0 && height != 0)
+                {
+                    speed = 0;
+                    WriteLine("Turn the engine back on or you will crash !!!!");
+                    changesSpeed(speed);
+                    break;
                 }
 
             } while (key.Key != ConsoleKey.Escape);
-            
-            
-           
 
         }
-       
 
-        //the speed contorl by left right arrow key
-        //Right: +50 km/h ,shift + right: +150km/h
-        //left : -50 km/h ,shift + left: -150km/h
 
-        //height control by up down arrow key
-        //up: +250m , shift + up : +500m
-        //down : -250m , shift + down : -500m
 
         //control by at least 2 air traffic controllers
 

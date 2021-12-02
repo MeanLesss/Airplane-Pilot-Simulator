@@ -12,14 +12,18 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 
         private float speed;
         private float height;
-        
+
         public Airplane() { }
         public Airplane(float speed, float height)
         {
             this.speed = speed;
             this.height = height;
         }
-        public float Speed {get; set; }
+        public float Speed
+        {
+            get => speed;
+            //set speed; 
+        }
         public float Height { get; set; }
 
         //the speed contorl by left right arrow key
@@ -36,17 +40,16 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
         {
             return height;
         }
-        public void ControlSpeedAndAltitude(ChangesSpeed changesSpeed, ChangesAltitude changesAltitude)
+        public void ControlSpeedAndAltitude(Controller[] arrController,ChangesSpeedAndAltitude changesSpeedAndAltitude)
         {
             ConsoleKeyInfo key;
-
+            Controller controller = new Controller();
             TreatControlCAsInput = true;
             speed = 0;
             height = 0;
 
             do
             {
-
                 key = ReadKey(true);
 
                 if (!((key.Modifiers & ConsoleModifiers.Shift) != 0))
@@ -55,7 +58,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                     {
                         height += 250;//meter
                                       //WriteLine("up arrow.....");
-                        changesAltitude(height);
+                                      //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.DownArrow)
@@ -65,20 +68,20 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                             height -= 250;// meter
                         }
                         // WriteLine("down arrow.....");
-                        changesAltitude(height);
+                        //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.LeftArrow)
                     {
                         speed -= 50; // km/h
                                      // WriteLine("left arrow.....");
-                        changesSpeed(speed);
+                                     //changesSpeed(speed);
 
                     }
                     if (key.Key == ConsoleKey.RightArrow)
                     {
                         speed += 50; // km/h
-                        changesSpeed(speed);
+                        //changesSpeed(speed);
 
                         //("right arrow.....");
                     }
@@ -89,14 +92,14 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                     {
                         height += 500; // meter
                                        //WriteLine("shift up arrow....");
-                        changesAltitude(height);
+                                       //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.DownArrow)
                     {
                         height -= 500; // meter
                                        //WriteLine("shift down arrow.....");
-                        changesAltitude(height);
+                                       //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.LeftArrow)
@@ -104,7 +107,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                         speed -= 150; // km/h
 
                         //WriteLine("shift left arrow.....");
-                        changesSpeed(speed);
+                        //changesSpeed(speed);
 
                     }
                     if (key.Key == ConsoleKey.RightArrow)
@@ -112,11 +115,11 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                         speed += 150; // km/h
 
                         //WriteLine("shift right arrow.....");
-                        changesSpeed(speed);
+                        //changesSpeed(speed);
 
                     }
                 }
-                if (speed == 1000)
+                /*if (speed == 1000)
                 {
                     WriteLine("You have reach the speed limit. Prepare to land !");
 
@@ -128,22 +131,36 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                 }
                 else if (speed > 0 && height == 0)
                 {
-                    WriteLine("You have crash the plane !!!!");
+                    WriteLine("You have crashed the plane !!!!");
                     break;
                 }
                 else if (speed <= 0 && height != 0)
                 {
                     speed = 0;
                     WriteLine("Turn the engine back on or you will crash !!!!");
-                    changesSpeed(speed);
+                    //changesSpeed(speed);
                     break;
+                }*/
+
+                Clear();
+                //Display all controller and condition
+                for (int i = 0; i < arrController.Length; i++)
+                {
+                    arrController[i].DisplayNameAndConditon(i);
+                }
+                // delegate to display current speed and height
+                changesSpeedAndAltitude(speed, height);
+
+                //show controller recommend altitude
+                for (int i = 0; i < arrController.Length; i++)
+                {
+                    arrController[i].RecommendAltitude(speed,i);
                 }
 
             } while (key.Key != ConsoleKey.Escape);
 
         }
-
-
+       
 
         //control by at least 2 air traffic controllers
 

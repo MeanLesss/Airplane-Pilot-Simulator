@@ -5,6 +5,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 {
     public delegate float ChangesSpeed(float speed);
     public delegate float ChangesAltitude(float height);
+    public delegate void ChangesSpeedAndAltitude(float speed, float height);
     class Program
     {
         
@@ -24,7 +25,8 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             string leftRight = @"The speed can be changed with the Left and Right arrow keys:
 
 (Right: + 50km/h, Left: -50km/h, Shift- Right : +150km/h, Shift-Left: -150km/h).
-";
+
+Press ESC to stop the emulation";
 
             string logo = @"
                _   _            _                      ___ _ _       _     __ _                 _       _             
@@ -76,7 +78,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             }
 
             int time = 0;
-
+            Controller controller = new Controller();
             do
             {
                 Clear();
@@ -87,10 +89,9 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                 WriteLine(leftRight);
                 WriteLine(upDown);
 
-                Controller controller = new Controller();
-                air.ControlSpeedAndAltitude(controller.DisplayCurrentSpeed,controller.DisplayCurrentAltitude);
 
-                //air.DisplayCurrentSpeedAndAltitude();
+                air.ControlSpeedAndAltitude(controllers, controller.DisplaySpeedAndAltitude);
+
                 ReadKey();
 
             } while (time != 18000);

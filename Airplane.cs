@@ -9,9 +9,25 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 {
     class Airplane
     {
+        string upDown = @"Altitude Up and Down arrow keys:
 
+(Up: +250m, Down: -250m, Shift- Up: +500m, Shift- Down: -500m).
+
+Press ESC to stop the emulation.
+";
+        string leftRight = @"
+Speed Left and Right arrow keys:
+
+(Right: + 50km/h, Left: -50km/h, Shift- Right : +150km/h, Shift-Left: -150km/h).
+";
         private float speed;
         private float height;
+        
+
+
+        Controller[] controllers;
+        SimException ex = new SimException();
+
 
         public Airplane() { }
         public Airplane(float speed, float height)
@@ -32,32 +48,33 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
         //height control by up down arrow key
         //up: +250m , shift + up : +500m
         //down : -250m , shift + down : -500m
-        public static float ChangeSpeed(float speed)
+
+        public void ControlSpeedAndAltitude(ChangesSpeedAndAltitude changesSpeedAndAltitude)
         {
-            return speed;
-        }
-        public static float ChangeAltitude(float height)
-        {
-            return height;
-        }
-        public void ControlSpeedAndAltitude(Controller[] arrController,ChangesSpeedAndAltitude changesSpeedAndAltitude)
-        {
-            ConsoleKeyInfo key;
+            AddController();
+            ArrDisplayNameAndConditon();
+
+             ConsoleKeyInfo key;
             Controller controller = new Controller();
             TreatControlCAsInput = true;
             speed = 0;
             height = 0;
 
+            WriteLine("Let's begin the simulaion. Press right arrow key to START!");
             do
             {
+
+                WriteLine(leftRight);
+                WriteLine(upDown);
+
                 key = ReadKey(true);
+
 
                 if (!((key.Modifiers & ConsoleModifiers.Shift) != 0))
                 {
                     if (key.Key == ConsoleKey.UpArrow)
                     {
                         height += 250;//meter
-                                      //WriteLine("up arrow.....");
                                       //changesAltitude(height);
 
                     }
@@ -67,23 +84,19 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                         {
                             height -= 250;// meter
                         }
-                        // WriteLine("down arrow.....");
                         //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.LeftArrow)
                     {
                         speed -= 50; // km/h
-                                     // WriteLine("left arrow.....");
                                      //changesSpeed(speed);
 
                     }
                     if (key.Key == ConsoleKey.RightArrow)
                     {
                         speed += 50; // km/h
-                        //changesSpeed(speed);
-
-                        //("right arrow.....");
+                                     //changesSpeed(speed);
                     }
                 }
                 else
@@ -91,76 +104,155 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                     if (key.Key == ConsoleKey.UpArrow)
                     {
                         height += 500; // meter
-                                       //WriteLine("shift up arrow....");
                                        //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.DownArrow)
                     {
                         height -= 500; // meter
-                                       //WriteLine("shift down arrow.....");
                                        //changesAltitude(height);
 
                     }
                     if (key.Key == ConsoleKey.LeftArrow)
                     {
                         speed -= 150; // km/h
-
-                        //WriteLine("shift left arrow.....");
-                        //changesSpeed(speed);
+                                      //changesSpeed(speed);
 
                     }
                     if (key.Key == ConsoleKey.RightArrow)
                     {
                         speed += 150; // km/h
-
-                        //WriteLine("shift right arrow.....");
-                        //changesSpeed(speed);
+                                      //changesSpeed(speed);
 
                     }
                 }
-                /*if (speed == 1000)
-                {
-                    WriteLine("You have reach the speed limit. Prepare to land !");
-
-                }
-                else if (speed > 1000)
-                {
-                    WriteLine("You went over the speed limit, reduce the speed immediately");
-
-                }
-                else if (speed > 0 && height == 0)
-                {
-                    WriteLine("You have crashed the plane !!!!");
-                    break;
-                }
-                else if (speed <= 0 && height != 0)
-                {
-                    speed = 0;
-                    WriteLine("Turn the engine back on or you will crash !!!!");
-                    //changesSpeed(speed);
-                    break;
-                }*/
-
+                //conditon here
                 Clear();
-                //Display all controller and condition
-                for (int i = 0; i < arrController.Length; i++)
+
+                //scoring 
+                controller.Scoring(speed, height, controllers);
+
+
+                //exception if speed over limit
+                ex.OverSpeed(speed);
+                if ((height - controllers[0].getRecommendAltitude()) > 1000)
                 {
-                    arrController[i].DisplayNameAndConditon(i);
+                    ex.PlaneCrash(height, controllers);
+                    break;
                 }
+                //exception if speed is greater than height
+
+                try
+                {
+                    if (speed > 100 && height == 0)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch
+                {
+                    WriteLine("The plane crashed");
+                    break;
+                }
+
+
+                //Display all controller and condition
+                ArrDisplayNameAndConditon();
+
                 // delegate to display current speed and height
                 changesSpeedAndAltitude(speed, height);
 
                 //show controller recommend altitude
-                for (int i = 0; i < arrController.Length; i++)
+                for (int i = 0; i < controllers.Length; i++)
                 {
-                    arrController[i].RecommendAltitude(speed,i);
+                    controllers[i].RecommendAltitude(speed, i);
                 }
 
-            } while (key.Key != ConsoleKey.Escape);
+                controller.DisplayCurrentPoint();
+                key.ToString();
+                //to stopp the simulation when speed and height is 0 mean landded
+                if (speed <= 0 && height <= 0)
+                {
+                    WriteLine("The plane landed successfully!!");
+                    break;
+                }
 
+            } while (speed >= 0 && height >= 0);
+
+            //Display point after
+            controller.DisplayEndedPoint();
+        }
+
+        public void DuringFlightMenu()
+        {
+            string option;
+            WriteLine(@"Do you want to add or remove the controller:
+1.Add controllers
+2.Remove controller
+3.Continue the flight.");
+            option = ReadLine();
+            switch (option)
+            {
+                case "1":
+                    AddController();
+                    break;
+                case "2":
+
+                    break;
+                case "3":
+
+                    break;
+            }
         }
        
+        public void AddController()
+        {
+            Random random = new Random();
+            float condition;
+            string name;
+            int noController;
+            do
+            {
+                Write("How many controller do you want? (at least 2 controllers) : ");
+                noController = int.Parse(ReadLine());
+                controllers = new Controller[noController];
+
+                if (noController < 2)
+                {
+                    WriteLine("Sorry input at least 2 controllers");
+                }
+
+            } while (noController < 2);
+
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                Write("Enter the controller " + i + " name : ");
+                name = ReadLine();
+                if (i == 0)
+                {
+                    condition = random.Next(0, 201);
+                }
+                else if (i == 1)
+                {
+                    condition = random.Next(-200, 1);
+                }
+                else
+                {
+                    condition = random.Next(-200, 200);
+                }
+                controllers[i] = new Controller(name, condition);
+            }
+        }
+
+
+        public void ArrDisplayNameAndConditon()
+        {
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                controllers[i].DisplayNameAndConditon(i);
+            }
+            
+        }
 
         //control by at least 2 air traffic controllers
 

@@ -15,6 +15,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
         private float condition ;
         private float tempCondition;
         private float Hr;
+
         private int point;
         private int penaltyPoint;
 
@@ -30,6 +31,12 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             this.tempCondition = condition;
         }
 
+
+        public float getRecommendAltitude()
+        {
+            return Hr;
+        }
+
         public void DisplayNameAndConditon(int id)
         {
             WriteLine("Controller " + id);
@@ -37,10 +44,6 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             WriteLine("\tCondition : " + tempCondition);
         }
 
-        public void DisplayRecommendAltitude()
-        {
-            WriteLine("Recommend altitude : " + Hr);
-        }
         //take random N while being create- is
         //meter to kilo meter = meter/1000
         //
@@ -63,18 +66,6 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             WriteLine("Recommend Altitude controller "+i +" = " + Hr);
         }
 
-        /*public float DisplayCurrentSpeed(float speed)
-        {
-            WriteLine("Current speed : " + speed);
-            WriteLine();
-            return speed;
-        }
-        public float DisplayCurrentAltitude(float height)
-        {
-            WriteLine("Current height : " + height);
-            WriteLine();
-            return height;
-        }*/
         public void DisplaySpeedAndAltitude(float speed,float height)
         {
             WriteLine();
@@ -82,19 +73,50 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             WriteLine("Current height : " + height);
             WriteLine();
         }
-        public int Point()
-        {
-            return point;
-        }
-        public int PenaltyPoint()
-        {
-            return penaltyPoint;
-        }
-        public void DisplayPoint()
-        {
-            WriteLine("Point = " + point);
-            WriteLine("Penalty point = " + penaltyPoint);
-        }
 
+        public void Scoring(float speed,float height,Controller[]  controllers)
+        {
+             float heightCal;
+
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                if (height > controllers[i].getRecommendAltitude() ||
+                   height < controllers[i].getRecommendAltitude())
+                {
+                    heightCal = 0;
+                    heightCal = controllers[i].getRecommendAltitude() - height;
+
+                    if (heightCal <= 0) { heightCal = -(heightCal); }
+
+                    WriteLine("heigghtCal  = " + heightCal);
+                    if (heightCal >= 300 && heightCal <= 600)
+                    {
+                        penaltyPoint += 25;
+                    }
+                    else if (heightCal >= 600 && heightCal <= 1000)
+                    {
+                        point += 50;
+                    }
+                    else if (speed > 1000)
+                    {
+                        penaltyPoint += 100;
+                    }
+                } 
+            }
+        }
+        public void DisplayCurrentPoint()
+        {
+            WriteLine("Penalty points = " + penaltyPoint);
+            WriteLine("Points = " + point);
+        }
+        public void DisplayEndedPoint()
+        {
+            int sum = 0;
+            WriteLine("Penalty points = " + penaltyPoint);
+            WriteLine("Points = " + point);
+            sum = point - penaltyPoint;
+            if(sum < 0) { sum = -(sum); }
+            WriteLine("Total = " + sum);
+        }
     }
 }

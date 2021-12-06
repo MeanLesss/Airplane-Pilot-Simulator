@@ -74,49 +74,82 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             WriteLine();
         }
 
-        public void Scoring(float speed,float height,Controller[]  controllers)
+        public void Scoring(float speed,float height,Controller[]  controllers,int noController)
         {
              float heightCal;
 
-            for (int i = 0; i < controllers.Length; i++)
+            for (int i = 0; i < noController; i++)
             {
-                if (height > controllers[i].getRecommendAltitude() ||
-                   height < controllers[i].getRecommendAltitude())
+                //height > controllers[i].getRecommendAltitude() ||
+                if (height < controllers[i].getRecommendAltitude() || speed > 1000)
                 {
                     heightCal = 0;
                     heightCal = controllers[i].getRecommendAltitude() - height;
 
                     if (heightCal <= 0) { heightCal = -(heightCal); }
 
-                    WriteLine("heigghtCal  = " + heightCal);
+                    //WriteLine("heigghtCal  = " + heightCal);
                     if (heightCal >= 300 && heightCal <= 600)
                     {
                         penaltyPoint += 25;
-                    }
-                    else if (heightCal >= 600 && heightCal <= 1000)
-                    {
-                        point += 50;
                     }
                     else if (speed > 1000)
                     {
                         penaltyPoint += 100;
                     }
-                } 
+                }
+                else
+                {
+                    heightCal = controllers[i].getRecommendAltitude() - height;
+
+                    if (heightCal <= 0) { heightCal = -(heightCal); }
+
+                    if (heightCal >= 600 && heightCal <= 1000)
+                    {
+                        point += 50;
+                    }
+                }
             }
         }
         public void DisplayCurrentPoint()
         {
-            WriteLine("Penalty points = " + penaltyPoint);
-            WriteLine("Points = " + point);
+            
+            WriteLine();
+            Write("Penalty points = ");
+            ForegroundColor = ConsoleColor.Red;
+            WriteLine(penaltyPoint);
+            ResetColor();
+
+            Write("Points = ");
+            ForegroundColor = ConsoleColor.Green;
+            WriteLine(point);
+            ResetColor();
         }
         public void DisplayEndedPoint()
         {
             int sum = 0;
-            WriteLine("Penalty points = " + penaltyPoint);
-            WriteLine("Points = " + point);
+            WriteLine();
+            Write("Penalty points = ");
+            ForegroundColor = ConsoleColor.Red;
+            WriteLine(penaltyPoint);
+            ResetColor();
             sum = point - penaltyPoint;
-            if(sum < 0) { sum = -(sum); }
+            
             WriteLine("Total = " + sum);
+            
+            if(sum < 0) 
+            {
+                WriteLine("You fail successfully please read the command next time");
+            }
+            else if(sum == 0)
+            {
+                WriteLine("You fail successfully try again next time!");
+            }
+            else
+            {
+                WriteLine("Congratualation you pass!");
+            }
+            
         }
     }
 }

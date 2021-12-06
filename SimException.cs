@@ -43,10 +43,31 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                         }
                     }
                 }
+                
             }
             catch
             {
+                ForegroundColor = ConsoleColor.Red;
                 WriteLine("The plane crashed");
+                ResetColor();
+            }
+        }
+        public void PlaneCrash(float speed,float height)
+        {
+
+            try
+            {
+
+                if (speed > 100 && height == 0)
+                {
+                    throw new Exception();
+                }
+            }
+            catch
+            {
+                ForegroundColor = ConsoleColor.Red;
+                WriteLine("The plane crashed");
+                ResetColor();
             }
         }
     }

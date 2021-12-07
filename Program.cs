@@ -27,14 +27,13 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 
             Airplane air = new Airplane();
 
+            SetWindowSize(130, 60);
             Clear();
             WriteLine(logo);
             int time = 0;
             Controller controller = new Controller();
             do
             {
-
-                
                 air.ControlSpeedAndAltitude(controller.DisplaySpeedAndAltitude);
                 break;
             } while (time != 18000);

@@ -20,16 +20,23 @@ Speed Left and Right arrow keys:
 
 (Right: + 50km/h, Left: -50km/h, Shift- Right : +150km/h, Shift-Left: -150km/h).
 ";
+        private string menu = @"1.add more controller
+2.Remove controller
+Enter your choice : ";
+
+
         private float speed;
         private float height;
 
+        private int option;
         private int noController;
         private int countInput;
         private int countRec;
         private ConsoleKeyInfo[] allCommandUsed = new ConsoleKeyInfo[200];
-        private float[] allRecommand = new float[200];
+        private float[] allRecommand = new float[300];
 
-        Controller[] controllers = new Controller[20];
+        //Controller[] controllers = new Controller[20];
+        List<Controller> controllers = new List<Controller>();
         SimException ex = new SimException();
 
 
@@ -59,7 +66,8 @@ Speed Left and Right arrow keys:
             {
                 Write("How many controller do you want? (at least 2 controllers) : ");
                 noController = int.Parse(ReadLine());
-                controllers = new Controller[noController];
+
+               // controllers = new Controller[noController];
 
                 if (noController < 2)
                 {
@@ -67,7 +75,12 @@ Speed Left and Right arrow keys:
                 }
 
             } while (noController < 2);
-            AddController();
+
+            for(int i = 0; i < noController; i++)
+            {
+                AddController(i);
+            }
+            
             ArrDisplayNameAndConditon();
 
             ConsoleKeyInfo key;
@@ -86,8 +99,29 @@ Speed Left and Right arrow keys:
             do
             {
                 TreatControlCAsInput = true;
+
+                //EXCEPTION
+                ex.OverSpeed(speed);
+                //exception if speed over limit
+                if ((height - controllers[0].getRecommendAltitude()) > 1000)
+                {
+                    ex.PlaneCrash(height, controllers);
+                    break;
+                }
+                
+                //ex.PullUp(height, controllers);
+                
+                //exception if speed is greater than height
+                if (speed > 100 && height == 0)
+                {
+                    ex.PlaneCrash(speed, height);
+                    break;
+                }
+
                 WriteLine(leftRight);
                 WriteLine(upDown);
+                Write(menu);
+
                 key = ReadKey(true);
                 allCommandUsed[countInput++] = key;
 
@@ -113,6 +147,16 @@ Speed Left and Right arrow keys:
                     {
                         speed += 50; // km/h
                     }
+                    if (key.Key == ConsoleKey.D1)
+                    {
+                        option = 1;
+                        DuringFlightMenu(option);
+                    }
+                    if (key.Key == ConsoleKey.D2)
+                    {
+                        option = 2;
+                        DuringFlightMenu(option);
+                    }
                 }
                 else
                 {
@@ -133,35 +177,14 @@ Speed Left and Right arrow keys:
                         speed += 150; // km/h
                     }
                 }
-                //conditon here
+                
+                TreatControlCAsInput = false;
+
                 Clear();
-
-                //scoring 
-                //controller.Scoring(speed, height, controllers,noController);
-
-
-                //set recommend al to arr
                 
-
-                //exception if speed over limit
-                ex.OverSpeed(speed);
-                for (int i = 0; i < noController; i++)
-                {
-                    if ((height - controllers[i].getRecommendAltitude()) > 1000)
-                    {
-                        ex.PlaneCrash(height, controllers);
-                        break;
-                    }
-                }
+                //scoring
+                controller.Scoring(speed, height, controllers, noController);
                 
-                //exception if speed is greater than height
-
-                if (speed > 100 && height == 0)
-                {
-                    ex.PlaneCrash(speed, height);
-                    break;
-                }
-
                 //Display all controller and condition
                 ArrDisplayNameAndConditon();
 
@@ -169,7 +192,7 @@ Speed Left and Right arrow keys:
                 changesSpeedAndAltitude(speed, height);
 
                 //show controller recommend altitude
-                for (int i = 0; i < controllers.Length; i++)
+                for (int i = 0; i < controllers.Count; i++)
                 {
                     controllers[i].RecommendAltitude(speed, i);
                     allRecommand[countRec++] = controllers[i].getRecommendAltitude();
@@ -177,46 +200,12 @@ Speed Left and Right arrow keys:
 
                 controller.DisplayCurrentPoint();
                 key.ToString();
+
                 //to stopp the simulation when speed and height is 0 mean landded
                 if (speed <= 0 && height <= 0)
                 {
                     WriteLine("The plane landed successfully!!");
                     break;
-                }
-
-                TreatControlCAsInput = false;
-                int option;
-                int newControllerNo = 0;
-                Random random = new Random();
-                float condition;
-                string name;
-                Write(@"1.add more controller
-2.Remove controller
-3.Continue flight
-Enter your choice : ");
-                option = int.Parse(ReadLine());
-                switch (option)
-                {
-                    case 1:
-                        Write("How many controller do you want? : ");
-                        newControllerNo = int.Parse(ReadLine());
-                        noController += newControllerNo;
-                        for (int i = noController - newControllerNo; i < noController; i++)
-                        {
-                            Write("Enter the controller " + i + " name : ");
-                            name = ReadLine();
-
-                            condition = random.Next(-200, 200);
-
-                            controllers[i - 1] = new Controller(name, condition);
-                        }
-                        break;
-
-                    case 2:
-
-                        break;
-                    case 3:
-                        break;
                 }
 
 
@@ -230,23 +219,54 @@ Enter your choice : ");
 
 
 
-        public void DuringFlightMenu()
+        public void DuringFlightMenu(int option)
         {
-            
-        }
+            int newControllerNo;
+            int removeId;
+            switch (option)
+            {
+                case 1:
 
-        public void AddController(int noController)
-        {
-            Random random = new Random();
-            float condition;
-            string name;
+                    Clear();
+                    TreatControlCAsInput = false;
 
-            Write("Enter the controller " + noController + " name : ");
-            name = ReadLine();
+                    Write("How many controller do you want? : ");
+                    newControllerNo = int.Parse(ReadLine());
+                    noController += newControllerNo;
+                    for (int i = 0; i < newControllerNo; i++)
+                    {
+                        AddController();
+                    }
+                    break;
 
-            condition = random.Next(-200, 200);
+                case 2:
 
-            controllers[noController] = new Controller(name, condition);
+                    Clear();
+
+                    ArrDisplayNameAndConditon();
+
+                    if (noController > 2)
+                    {
+                        TreatControlCAsInput = false;
+                        Write("Enter the controller id to remove : ");
+                        removeId = int.Parse(ReadLine());
+                        controllers.RemoveAt(removeId);
+                        noController--;
+                        ForegroundColor = ConsoleColor.Green;
+                        WriteLine("Controller removed");
+                        ResetColor();
+                    }
+                    else
+                    {
+                        ForegroundColor = ConsoleColor.Red;
+                        WriteLine("Sorry you can't remove any controller you need 2 controller to operate the flight");
+                        ResetColor();
+                    }
+
+                    break;
+                case 3:
+                    break;
+            }
         }
 
         public void AddController()
@@ -254,32 +274,42 @@ Enter your choice : ");
             Random random = new Random();
             float condition;
             string name;
-            
+            Write("Enter the controller name : ");
+            name = ReadLine();
 
-            for (int i = 0; i < controllers.Length; i++)
+            condition = random.Next(-200, 200);
+
+            controllers.Add(new Controller(name, condition));
+        }
+
+        public void AddController(int i)
+        {
+            Random random = new Random();
+            float condition;
+            string name;
+
+            Write("Enter the controller name : ");
+            name = ReadLine();
+                condition = random.Next(-200, 200);
+            if (i == 0)
             {
-                Write("Enter the controller " + i + " name : ");
-                name = ReadLine();
-                if (i == 0)
-                {
-                    condition = random.Next(0, 201);
-                }
-                else if (i == 1)
-                {
-                    condition = random.Next(-200, 1);
-                }
-                else
-                {
-                    condition = random.Next(-200, 200);
-                }
-                controllers[i] = new Controller(name, condition);
+                condition = random.Next(0, 201);
             }
+            else if (i == 1)
+            {
+                condition = random.Next(-200, 1);
+            }
+            else
+            {
+                condition = random.Next(-200, 200);
+            }
+            controllers.Add(new Controller(name, condition));
         }
 
 
         public void ArrDisplayNameAndConditon()
         {
-            for (int i = 0; i < controllers.Length; i++)
+            for (int i = 0; i < controllers.Count; i++)
             {
                 controllers[i].DisplayNameAndConditon(i);
             }

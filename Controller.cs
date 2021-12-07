@@ -42,6 +42,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             WriteLine("Controller " + id);
             Write("Name : " + name);
             WriteLine("\tCondition : " + tempCondition);
+            WriteLine();
         }
 
         //take random N while being create- is
@@ -62,33 +63,38 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
         {
             condition = tempCondition;
             condition /= 1000;
-            Hr = 7 * speed - condition;
-            WriteLine("Recommend Altitude controller "+i +" = " + Hr);
+            Hr = (7 * speed) - condition;
+            Write("Recommend Altitude controller " + i + " = ");
+            ForegroundColor = ConsoleColor.Cyan;
+            WriteLine( Hr);
+            ResetColor();
         }
 
         public void DisplaySpeedAndAltitude(float speed,float height)
         {
             WriteLine();
+            ForegroundColor = ConsoleColor.Yellow;
             WriteLine("Current speed : " + speed);
             WriteLine("Current height : " + height);
+            ResetColor();
             WriteLine();
         }
 
-        public void Scoring(float speed,float height,Controller[]  controllers,int noController)
+        public void Scoring(float speed,float height,List<Controller> controllers,int noController)
         {
              float heightCal;
 
-            for (int i = 0; i < noController; i++)
+            for (int i = 0; i < controllers.Count; i++)
             {
+                heightCal = 0;
+                heightCal = controllers[i].getRecommendAltitude() - height;
                 //height > controllers[i].getRecommendAltitude() ||
                 if (height < controllers[i].getRecommendAltitude() || speed > 1000)
                 {
-                    heightCal = 0;
-                    heightCal = controllers[i].getRecommendAltitude() - height;
-
                     if (heightCal <= 0) { heightCal = -(heightCal); }
 
                     //WriteLine("heigghtCal  = " + heightCal);
+
                     if (heightCal >= 300 && heightCal <= 600)
                     {
                         penaltyPoint += 25;
@@ -98,9 +104,9 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                         penaltyPoint += 100;
                     }
                 }
-                else
+                if (height > controllers[i].getRecommendAltitude())
                 {
-                    heightCal = controllers[i].getRecommendAltitude() - height;
+                   /* heightCal = controllers[i].getRecommendAltitude() - height;*/
 
                     if (heightCal <= 0) { heightCal = -(heightCal); }
 

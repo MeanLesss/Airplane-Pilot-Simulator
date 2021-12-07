@@ -20,16 +20,48 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             }
             catch 
             {
+                ForegroundColor = ConsoleColor.Red;
                 WriteLine("Slow down and prepare to land !");
                 WriteLine();
+                ResetColor();
             }
         }
-        public void PlaneCrash(float height, Controller[] controllers)
+
+        public void PullUp(float height, List<Controller> controllers)
         {
             try
             {
                 float heightCal;
-                for (int i = 0; i < controllers.Length; i++)
+                for (int i = 0; i < controllers.Count; i++)
+                {
+                    if (height < controllers[i].getRecommendAltitude())
+                    {
+                        heightCal = 0;
+                        heightCal = controllers[i].getRecommendAltitude() - height;
+
+                        if (heightCal <= 0) { heightCal = -(heightCal); }
+                        if (heightCal < 300)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                }
+
+            }
+            catch
+            {
+                ForegroundColor = ConsoleColor.Yellow;
+                WriteLine("Pull up it dangerous altitude!");
+                ResetColor();
+            }
+        }
+
+        public void PlaneCrash(float height, List<Controller> controllers)
+        {
+            try
+            {
+                float heightCal;
+                for (int i = 0; i < controllers.Count; i++)
                 {
                     if (height > controllers[i].getRecommendAltitude())
                     {

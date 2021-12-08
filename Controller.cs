@@ -88,7 +88,6 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             {
                 heightCal = 0;
                 heightCal = controllers[i].getRecommendAltitude() - height;
-                //height > controllers[i].getRecommendAltitude() ||
                 if (height < controllers[i].getRecommendAltitude() || speed > 1000)
                 {
                     if (heightCal <= 0) { heightCal = -(heightCal); }
@@ -106,8 +105,6 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
                 }
                 if (height > controllers[i].getRecommendAltitude())
                 {
-                   /* heightCal = controllers[i].getRecommendAltitude() - height;*/
-
                     if (heightCal <= 0) { heightCal = -(heightCal); }
 
                     if (heightCal >= 600 && heightCal <= 1000)

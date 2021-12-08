@@ -49,7 +49,6 @@ Enter your choice : ";
         public float Speed
         {
             get => speed;
-            //set speed; 
         }
         public float Height { get; set; }
 
@@ -120,11 +119,13 @@ Enter your choice : ";
 
                 WriteLine(leftRight);
                 WriteLine(upDown);
-                Write(menu);
+                if(countInput != 0)
+                {
+                    Write(menu);
+                }
 
                 key = ReadKey(true);
                 allCommandUsed[countInput++] = key;
-
 
                 if (!((key.Modifiers & ConsoleModifiers.Shift) != 0))
                 {
@@ -147,6 +148,7 @@ Enter your choice : ";
                     {
                         speed += 50; // km/h
                     }
+                    //option menu
                     if (key.Key == ConsoleKey.D1)
                     {
                         option = 1;
@@ -181,7 +183,7 @@ Enter your choice : ";
                 TreatControlCAsInput = false;
 
                 Clear();
-                
+
                 //scoring
                 controller.Scoring(speed, height, controllers, noController);
                 
@@ -208,7 +210,6 @@ Enter your choice : ";
                     break;
                 }
 
-
             } while (speed >= 0 && height >= 0);
 
             //Display point after
@@ -217,12 +218,9 @@ Enter your choice : ";
             ArrDisplayRecommand();
         }
 
-
-
         public void DuringFlightMenu(int option)
         {
             int newControllerNo;
-            int removeId;
             switch (option)
             {
                 case 1:
@@ -248,10 +246,7 @@ Enter your choice : ";
                     if (noController > 2)
                     {
                         TreatControlCAsInput = false;
-                        Write("Enter the controller id to remove : ");
-                        removeId = int.Parse(ReadLine());
-                        controllers.RemoveAt(removeId);
-                        noController--;
+                        RemoveController();
                         ForegroundColor = ConsoleColor.Green;
                         WriteLine("Controller removed");
                         ResetColor();
@@ -267,6 +262,16 @@ Enter your choice : ";
                 case 3:
                     break;
             }
+        }
+
+        public void RemoveController()
+        {
+            int removeId;
+
+            Write("Enter the controller id to remove : ");
+            removeId = int.Parse(ReadLine());
+            controllers.RemoveAt(removeId);
+            noController--;
         }
 
         public void AddController()
@@ -335,11 +340,5 @@ Enter your choice : ";
             }
 
         }
-
-        //control by at least 2 air traffic controllers
-
-        //max speed is 1000km/h
-
-        //meter to kilo meter = meter/1000
     }
 }

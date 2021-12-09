@@ -31,6 +31,10 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             this.tempCondition = condition;
         }
 
+        public int getPentalyPoint()
+        {
+            return penaltyPoint;
+        }
 
         public float getRecommendAltitude()
         {
@@ -136,23 +140,31 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             ForegroundColor = ConsoleColor.Red;
             WriteLine(penaltyPoint);
             ResetColor();
-            sum = point - penaltyPoint;
+            sum = point - penaltyPoint;// fix here
             
             WriteLine("Total = " + sum);
             
             if(sum < 0) 
             {
+                ForegroundColor = ConsoleColor.Red;
                 WriteLine("You fail successfully please read the command next time");
+                ResetColor();
             }
             else if(sum == 0)
             {
+                ForegroundColor = ConsoleColor.Red;
                 WriteLine("You fail successfully try again next time!");
+                ResetColor();
+
             }
             else
             {
+                ForegroundColor = ConsoleColor.Green;
                 WriteLine("Congratualation you pass!");
+                ResetColor();
+
             }
-            
+
         }
     }
 }

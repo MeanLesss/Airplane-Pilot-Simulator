@@ -44,6 +44,7 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
 
             WriteLine("Press any key to continue...");
             ReadKey();
+            ReadKey();
         }
     }
 }

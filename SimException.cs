@@ -27,6 +27,24 @@ namespace Airplane_pilot_simulator_KANG_sokvimean
             }
         }
 
+        public void UnfitToFly(Controller controller)
+        {
+            try
+            {
+                if(controller.getPentalyPoint() >= 1000)
+                {
+                    throw new Exception();
+                }
+            }
+            catch
+            {
+                ForegroundColor = ConsoleColor.Red;
+                WriteLine();
+                WriteLine("You have reached 1000 penaly point. You have failed automatically.");
+                ResetColor();
+            }
+        }
+
         public void PullUp(float height, List<Controller> controllers)
         {
             try

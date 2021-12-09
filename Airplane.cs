@@ -116,6 +116,11 @@ Enter your choice : ";
                     ex.PlaneCrash(speed, height);
                     break;
                 }
+                if(controller.getPentalyPoint() >= 1000)
+                {
+                    ex.UnfitToFly(controller);
+                    break;
+                }
 
                 WriteLine(leftRight);
                 WriteLine(upDown);

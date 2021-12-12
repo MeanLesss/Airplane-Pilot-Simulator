@@ -262,9 +262,6 @@ Enter your choice : ";
                         WriteLine("Sorry you can't remove any controller you need 2 controller to operate the flight");
                         ResetColor();
                     }
-
-                    break;
-                case 3:
                     break;
             }
         }
